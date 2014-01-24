@@ -38,7 +38,7 @@ Latest version:
 
 :   [Check](/About?action=check)
 
-<? elseif ($latest_version == $current_version): ?>
+<? elseif (strcmp($latest_version, $current_version) == 0): ?>
 
 Latest version:
 

@@ -1,7 +1,7 @@
 <?xml version='1.0' standalone='yes'?>
 
 <!DOCTYPE PLUGIN [
-<!ENTITY version "2014.01.21">
+<!ENTITY version "2014.01.24">
 ]>
 
 <PLUGIN Version="&version;">
@@ -43,15 +43,15 @@ gittyup
 -->
 <FILE Name="/tmp/plugin-tmp" Run="/bin/bash">
 <INLINE>
-# Zap current webGui
-rm -r /usr/local/emhttp/plugins/webGui
-rm -r /usr/local/emhttp/plugins/indexer
-# Install new webGui
+# unzip new webGui
 tar -xf /boot/plugins/webGui.tar.gz -C /tmp
-mv /tmp/webGui-master/* /usr/local/emhttp
-rmdir /tmp/webGui-master
-# Make sure our config directory exists
+# make sure our config directory exists
 mkdir -p /boot/config/plugins/webGui
+# if running stock webGui, set up a symlink
+if [ ! -L /usr/local/emhttp ]; then
+  mv /usr/local/emhttp /usr/local/emhttp-orig
+  ln -s /tmp/webGui-master /usr/local/emhttp
+fi
 # Remove this script
 rm -f /tmp/plugin-tmp
 </INLINE>
