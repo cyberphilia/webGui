@@ -1,0 +1,9 @@
+#!/bin/bash
+# Fetch the webGui release from github, ie, the master branch.
+set -ev
+mkdir -p /boot/plugins
+wget --quiet --no-check-certificate https://raw.github.com/limetech/webGui/master/webGui.plg -O /boot/plugins/webGui.plg
+if [ -f /boot/plugins/webGui.tar.gz ]; then
+  rm /boot/plugins/webGui.tar.gz
+fi
+installplg /boot/plugins/webGui.plg

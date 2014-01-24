@@ -1,0 +1,60 @@
+<?xml version='1.0' standalone='yes'?>
+
+<!DOCTYPE PLUGIN [
+<!ENTITY version "2014.01.21">
+]>
+
+<PLUGIN Version="&version;">
+<!--
+Pre-installation: wait for network
+-->
+<FILE Name="/tmp/plugin-tmp" Run="/bin/bash">
+<INLINE>
+# Wait until network is ready
+timer=30
+while [ $timer -gt 0 ]; do
+  gateway=$(route -n | awk '/^0.0.0.0/ {print $2}')
+  if [ -n "$gateway" ] &amp;&amp; ping -q -n -c 1 $gateway >/dev/null ; then
+    break
+  fi
+  timer=$((timer-1))
+  sleep 1
+done
+if [ $timer -eq 0 ]; then
+  echo "No network communication !!!"
+fi
+# Remove this script
+rm -f /tmp/plugin-tmp
+</INLINE>
+</FILE>
+
+<!-- required slack packages to be downloaded should come first -->
+
+<!-- other files to be downloaded should come next -->
+<!--
+get webGui from github as tarball
+-->
+<FILE Name="/boot/plugins/webGui.tar.gz">
+<URL>--no-check-certificate https://github.com/limetech/webGui/archive/master.tar.gz</URL>
+</FILE>
+
+<!--
+gittyup
+-->
+<FILE Name="/tmp/plugin-tmp" Run="/bin/bash">
+<INLINE>
+# Zap current webGui
+rm -r /usr/local/emhttp/plugins/webGui
+rm -r /usr/local/emhttp/plugins/indexer
+# Install new webGui
+tar -xf /boot/plugins/webGui.tar.gz -C /tmp
+mv /tmp/webGui-master/* /usr/local/emhttp
+rmdir /tmp/webGui-master
+# Make sure our config directory exists
+mkdir -p /boot/config/plugins/webGui
+# Remove this script
+rm -f /tmp/plugin-tmp
+</INLINE>
+</FILE>
+
+</PLUGIN>

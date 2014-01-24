@@ -1,0 +1,61 @@
+Menu="Tasks:99"
+Title="About"
+---
+<?
+$xml = @simplexml_load_file( "/usr/local/emhttp/webGui.plg", NULL, LIBXML_NOCDATA);
+if (($xml !== FALSE) && isset($xml->attributes()->Version))
+  $current_version = $xml->attributes()->Version;
+
+@unlink("/tmp/webGui.plg");
+
+if (isset($action) && ($action == "check")) {
+   exec("wget --quiet --no-check-certificate https://raw.github.com/limetech/webGui/master/webGui.plg -O /tmp/webGui.plg");
+   $xml = @simplexml_load_file( "/tmp/webGui.plg", NULL, LIBXML_NOCDATA);
+   if (($xml !== FALSE) && isset($xml->attributes()->Version))
+      $latest_version = $xml->attributes()->Version;
+}
+?>
+
+**Version**
+
+<? if (isset($current_version)): ?>
+
+Current version:
+
+:   <?=$current_version;?>
+
+<? else: ?>
+
+Current version:
+
+:   *Unknown*
+
+<? endif; ?>
+
+<? if (!isset($latest_version)): ?>
+
+Latest version:
+
+:   [Check](/About?action=check)
+
+<? elseif ($latest_version == $current_version): ?>
+
+Latest version:
+
+:   <?=$latest_version;?> *Up to date*
+
+<? else: ?>
+
+<form markdown="1" method="POST" action="/update.htm?cmd=/usr/local/emhttp/plugins/webGui/scripts/upgrade_webGui&forkCmd=Start" target="progressFrame">
+
+Latest version:
+
+:   <?=$latest_version;?> *Update available*
+
+:   <input type="submit" name="submit_button" value="Upgrade" disabled>
+    <input type="checkbox" onClick="submit_button.disabled=!this.checked"><small>Yes I want to do this</small>
+
+</form>
+
+<? endif; ?>
+<? echo Markdown(file_get_contents("/usr/local/emhttp/LICENSE")); ?>

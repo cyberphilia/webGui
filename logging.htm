@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<head>
+<title></title>
+<style type="text/css">
+.logLine {
+  font-family: Monospace;
+  font-size: 10px;
+}
+</style>
+<script language="javascript">
+function addLog(logLine) {
+  document.body.innerHTML += logLine;
+  window.scrollTo(0,document.body.scrollHeight);
+}
+function addCloseButton() {
+  addLog("<p><button class='logLine' type='button' onclick='window.close()'>close</button>");
+}
+</script>
+</head>
+<body class="logLine" onload="addCloseButton()">
+</body>
+</html>
