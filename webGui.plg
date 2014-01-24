@@ -1,7 +1,7 @@
 <?xml version='1.0' standalone='yes'?>
 
 <!DOCTYPE PLUGIN [
-<!ENTITY version "2014.01.24">
+<!ENTITY version "2014.01.24a">
 ]>
 
 <PLUGIN Version="&version;">

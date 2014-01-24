@@ -6,4 +6,4 @@ wget --quiet --no-check-certificate https://raw.github.com/limetech/webGui/maste
 if [ -f /boot/plugins/webGui.tar.gz ]; then
   rm /boot/plugins/webGui.tar.gz
 fi
-installplg /boot/plugins/webGui.plg
+/usr/local/sbin/installplg /boot/plugins/webGui.plg
