@@ -10,6 +10,10 @@ function check_network_settings_form()
 	        form.BONDING_MODE.disabled=false;
 	else
 	        form.BONDING_MODE.disabled=true;
+	if (form.BRIDGING.value=="yes")
+	        form.BRNAME.disabled=false;
+	else
+	        form.BRNAME.disabled=true;
 	if (form.USE_DHCP.value=="yes") {
 		form.IPADDR.disabled=true;
 		form.NETMASK.disabled=true;
@@ -52,7 +56,11 @@ Enable bonding:
     <?=mk_option($var['BONDING'], "yes", "Yes");?>
     </select>
 
-    > Bonding is a feature that lets you combine multiple physical Ethernet ports.
+    > Bonding is a feature that lets you combine multiple physical Ethernet interfaces into a
+    > single *bond* interface named **bond0**.  This lets you connect
+    > any or all your ethernet ports to the same switch.
+
+    > At present this feature will bond all present ethernet interfaces.
 
 Bonding mode:
 
@@ -67,6 +75,34 @@ Bonding mode:
     </select>
 
     > Mode 1 (active-backup) is the recommended default.  Other modes may require switch support.
+
+Setup bridge:
+
+:   <select name="BRIDGING" size="1" onchange="check_network_settings_form();">
+    <?=mk_option($var['BRIDGING'], "no", "No");?>
+    <?=mk_option($var['BRIDGING'], "yes", "Yes");?>
+    </select>
+
+    > Bridging allows you to connect two or more network segments
+    > within one logical network.  At present this feature will bridge all
+    > present ethernet interfaces.
+
+    > **Caution:** if bonding is also not enabled, do not connect two or more
+    > ethernet ports to the same switch unless the switch supports STP
+    > (most consumer switches **do not**).
+    > Doing so will cause an "ARP broadcast storm" and can bring down your
+    > entire network (unplugging all sever ethernet ports except one
+    > typically will restore your network).
+
+    > If bonding is also enabled, the bridge will initially consist of
+    > just the **bond0** interface.  This is useful if you are setting up a bridge for Xen.
+
+Bridge name:
+
+:   <input type="text" name="BRNAME" maxlength="80" value="<?=$var['BRNAME'];?>">
+
+    > This is the name of the bridge interface.  If left blank, the name of the bridge will be **br0**.
+    > If running as a Xen dom0 we recommend setting this to **xenbr0**.
 
 Obtain IP Address Automatically:
 
